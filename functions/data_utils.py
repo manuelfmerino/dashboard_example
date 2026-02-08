@@ -7,7 +7,7 @@ def fetch_selected_data():
     try:
         # Connect to your PostgreSQL database
         conn = psycopg2.connect(
-            dbname="ecg_db",
+            dbname="stroke_db",
             user="manfernandez",  # mostly this is used
             password="",
             host="127.0.0.1",  # mostly this is used
@@ -18,7 +18,7 @@ def fetch_selected_data():
         cur = conn.cursor()
 
         # Execute a query to fetch file number, gender, and diseases
-        cur.execute("SELECT * FROM public.ecg_data")
+        cur.execute("SELECT * FROM public.stroke_data")
 
         # Fetch all rows from the result set
         rows = cur.fetchall()

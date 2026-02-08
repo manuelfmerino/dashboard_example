@@ -6,29 +6,122 @@ import numpy as np
 
 ### Plot generation
 # Function to generate the pie chart
-def generate_pie_chart(data, headers):
+def generate_gender_pie_chart(data, headers):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
 
-    # Count the occurrences of each disease
-    disease_counts = df[["DX1", "DX2", "DX3"]].stack().value_counts()
+    # Get stroke-positive people
+    df = df[df["stroke"] == "Yes"]
 
-    # Combine diseases with counts less than 1200 into 'Others' category
-    disease_counts = disease_counts[disease_counts >= 1200]
-    others_count = sum(disease_counts[disease_counts < 1200])
-    disease_counts = disease_counts[disease_counts >= 1200]
-    disease_counts["Others"] = others_count
+    # Count the occurrences of each disease
+    gender_counts = df["gender"].value_counts()
 
     figure = go.Figure(
-        data=[
-            go.Pie(labels=disease_counts.index, values=disease_counts.values, hole=0.6)
-        ]
+        data=[go.Pie(labels=gender_counts.index, values=gender_counts.values, hole=0.6)]
     )
     figure.update_layout(
-        title="Disease Distribution", autosize=False, width=800, height=600
+        title={
+            "text": "Gender distribution",
+            "font": {"size": 24},
+            "x": 0.5,  # center title
+        },
+        autosize=False,
+        width=500,
+        height=500,
     )
 
     return figure
+
+
+def generate_agebar_chart(data, headers):
+    # Convert the data and headers to a pandas DataFrame
+    df = pd.DataFrame(data, columns=headers)
+
+    # Get stroke-positive people
+    df = df[df["stroke"] == "Yes"]
+
+    # Convert age column to numeric data type
+    df["age"] = pd.to_numeric(df["age"], errors="coerce")
+
+    # Define age groups
+    age_groups = [
+        "0-5",
+        "5-10",
+        "10-15",
+        "15-20",
+        "20-25",
+        "25-30",
+        "30-35",
+        "35-40",
+        "40-45",
+        "45-50",
+        "50-55",
+        "55-60",
+        "60-65",
+        "65-70",
+        "70-75",
+        "75-80",
+        "80-85",
+        "85-90",
+        "90+",
+    ]
+
+    # Assign each age to an age group
+    df["Age Group"] = pd.cut(
+        df["age"],
+        bins=[
+            0,
+            5,
+            10,
+            15,
+            20,
+            25,
+            30,
+            35,
+            40,
+            45,
+            50,
+            55,
+            60,
+            65,
+            70,
+            75,
+            80,
+            85,
+            90,
+            float("inf"),
+        ],
+        labels=age_groups,
+        right=False,
+    )
+
+    # Group the data by age group and calculate the count
+    grouped_data = df.groupby("Age Group").size().reset_index(name="Count")
+
+    # Create the bar chart
+    fig = go.Figure(
+        data=go.Bar(
+            x=grouped_data["Age Group"],
+            y=grouped_data["Count"],
+            text=grouped_data["Count"],
+            textposition="auto",
+        )
+    )
+
+    # Customize the layout
+    fig.update_layout(
+        title={
+            "text": "Age distribution",
+            "font": {"size": 24},
+            "x": 0.5,  # center title
+        },
+        xaxis_title="Age Group",
+        yaxis_title="Count",
+        width=900,
+        height=500,
+    )
+
+    return fig
 
 
 def generate_line_chart(data, headers):
@@ -90,62 +183,6 @@ def generate_bar_chart(data, headers):
     return fig
 
 
-def generate_agebar_chart(data, headers):
-    # Convert the data and headers to a pandas DataFrame
-    df = pd.DataFrame(data, columns=headers)
-
-    # Drop missing values (empty cells)
-    df = df.dropna(subset=["Age"])
-
-    # Convert age column to numeric data type
-    df["Age"] = pd.to_numeric(df["Age"], errors="coerce")
-
-    # Define age groups
-    age_groups = [
-        "0-10",
-        "10-20",
-        "20-30",
-        "30-40",
-        "40-50",
-        "50-60",
-        "60-70",
-        "70-80",
-        "80-90",
-        "90+",
-    ]
-
-    # Assign each age to an age group
-    df["Age Group"] = pd.cut(
-        df["Age"],
-        bins=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, float("inf")],
-        labels=age_groups,
-        right=False,
-    )
-
-    # Group the data by age group and calculate the count
-    grouped_data = df.groupby("Age Group").size().reset_index(name="Count")
-
-    # Create the bar chart
-    fig = go.Figure(
-        data=go.Bar(
-            x=grouped_data["Age Group"],
-            y=grouped_data["Count"],
-            text=grouped_data["Count"],
-            textposition="auto",
-        )
-    )
-
-    # Customize the layout
-    fig.update_layout(
-        title="Age Group Distribution",
-        xaxis_title="Age Group",
-        yaxis_title="Count",
-        width=1500,
-    )
-
-    return fig
-
-
 def generate_agepie_chart(data, headers):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
@@ -189,8 +226,8 @@ data, headers = data_utils.fetch_selected_data()
 
 
 # Define the callback function to update the pie chart
-def update_pie_chart(chart_id):
-    figure = generate_pie_chart(data, headers)
+def update_gender_pie_chart(chart_id):
+    figure = generate_gender_pie_chart(data, headers)
     return figure
 
 
@@ -216,26 +253,24 @@ def update_line_chart(chart_id):
 
 # Register the callback functions
 def register_callbacks(app):
-    @app.callback(Output("ecg-pie-chart", "figure"), [Input("ecg-pie-chart", "id")])
-    def update_pie_chart_callback(chart_id):
-        return update_pie_chart(chart_id)
-
     @app.callback(
-        Output("ecg-agepie-chart", "figure"), [Input("ecg-agepie-chart", "id")]
+        Output("gender-pie-chart", "figure"), [Input("gender-pie-chart", "id")]
     )
-    def update_agepie_chart_callback(chart_id):
-        return update_agepie_chart(chart_id)
+    def update_gender_pie_chart_callback(chart_id):
+        return update_gender_pie_chart(chart_id)
 
-    @app.callback(Output("ecg-bar-chart", "figure"), [Input("ecg-bar-chart", "id")])
-    def update_bar_chart_callback(chart_id):
-        return update_bar_chart(chart_id)
-
-    @app.callback(
-        Output("ecg-agebar-chart", "figure"), [Input("ecg-agebar-chart", "id")]
-    )
+    @app.callback(Output("agebar-chart", "figure"), [Input("agebar-chart", "id")])
     def update_agebar_chart_callback(chart_id):
         return update_agebar_chart(chart_id)
 
-    @app.callback(Output("ecg-line-chart", "figure"), [Input("ecg-line-chart", "id")])
-    def update_line_chart_callback(chart_id):
-        return update_line_chart(chart_id)
+    # @app.callback(Output("agepie-chart", "figure"), [Input("agepie-chart", "id")])
+    # def update_agepie_chart_callback(chart_id):
+    #    return update_agepie_chart(chart_id)
+
+    # @app.callback(Output("bar-chart", "figure"), [Input("bar-chart", "id")])
+    # def update_bar_chart_callback(chart_id):
+    #    return update_bar_chart(chart_id)
+
+    # @app.callback(Output("line-chart", "figure"), [Input("line-chart", "id")])
+    # def update_line_chart_callback(chart_id):
+    #    return update_line_chart(chart_id)
