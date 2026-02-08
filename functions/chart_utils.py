@@ -5,7 +5,6 @@ import numpy as np
 
 
 ### Plot generation
-# Function to generate the pie chart
 def generate_gender_pie_chart(data, headers):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
@@ -13,7 +12,7 @@ def generate_gender_pie_chart(data, headers):
     # Get stroke-positive people
     df = df[df["stroke"] == "Yes"]
 
-    # Count the occurrences of each disease
+    # Count the occurrences of each gender
     gender_counts = df["gender"].value_counts()
 
     figure = go.Figure(
@@ -124,97 +123,71 @@ def generate_agebar_chart(data, headers):
     return fig
 
 
-def generate_line_chart(data, headers):
-    df = pd.DataFrame(data, columns=headers)
-
-    dx1_counts = df["DX1"].value_counts().reset_index()
-    dx1_counts.columns = ["DX1", "Count"]
-    dx1_counts = dx1_counts.sort_values(by="DX1")
-
-    fig = px.line(dx1_counts, x="DX1", y="Count")
-
-    fig.update_layout(
-        yaxis=dict(range=[0, 20000]), xaxis_title="DX1", yaxis_title="Count"
-    )
-
-    return fig
-
-
-def generate_bar_chart(data, headers):
+def generate_stroke_positive_smoker_chart(data, headers):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
 
-    # Reshape the data to create a single 'Disease' column
-    diseases = df[["DX1", "DX2", "DX3"]].values.flatten()
-    genders = df["Gender"].values.repeat(3)
-    df = pd.DataFrame({"Disease": diseases, "Gender": genders})
+    # Get stroke-positive people
+    df = df[df["stroke"] == "Yes"]
 
-    # Drop missing values (empty cells)
-    df = df.dropna(subset=["Disease"])
+    # Count the occurrences of each smoking case
+    smoking_counts = df["smoking_status"].value_counts()
 
-    # Group the data by disease and gender, and calculate the count
-    grouped_data = df.groupby(["Disease", "Gender"]).size().reset_index(name="Count")
-
-    # Create the bar chart
-    fig = go.Figure()
-
-    # Add bars for each disease and gender
-    for gender in grouped_data["Gender"].unique():
-        gender_data = grouped_data[grouped_data["Gender"] == gender]
-        fig.add_trace(
-            go.Bar(
-                x=gender_data["Disease"],
-                y=gender_data["Count"],
-                name=gender,
-                text=gender_data["Count"],
-                textposition="auto",
-            )
-        )
-
-    # Customize the layout
-    fig.update_layout(
-        title="Distribution of Diseases by Gender",
-        xaxis_title="Disease",
-        yaxis_title="Count",
-        barmode="group",
-        width=1500,
-        height=700,
+    figure = go.Figure(
+        data=[
+            go.Pie(labels=smoking_counts.index, values=smoking_counts.values, hole=0.6)
+        ]
     )
-    return fig
+    figure.update_layout(
+        title={
+            "text": "Smoking status",
+            "font": {"size": 24},
+            "x": 0.5,  # center title
+        },
+        autosize=False,
+        width=500,
+        height=500,
+    )
+
+    return figure
 
 
-def generate_agepie_chart(data, headers):
+def generate_glucose_box_chart(data, headers):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
 
-    # Reshape the data to create a single 'Disease' column
-    diseases = df[["DX1", "DX2", "DX3"]].values.flatten()
-    genders = df["Gender"].values.repeat(3)
-    df = pd.DataFrame({"Disease": diseases, "Gender": genders})
-
-    # Drop missing values (empty cells)
-    df = df.dropna(subset=["Disease"])
-
-    # Group the data by gender and calculate the count
-    grouped_data = df.groupby("Gender").size().reset_index(name="Count")
-
-    # Create the pie chart
-    fig = go.Figure(
-        data=go.Pie(
-            labels=grouped_data["Gender"],
-            values=grouped_data["Count"],
-            textinfo="label+percent",
-            insidetextorientation="radial",
-            hole=0.6,
+    figure = go.Figure()
+    figure.add_trace(
+        go.Box(
+            y=df[df["stroke"] == "No"]["avg_glucose_level"],
+            name="No",
+            marker_color="lightseagreen",
         )
     )
-
-    # Customize the layout
-    fig.update_layout(
-        title="Distribution of Diseases by Gender",
+    figure.add_trace(
+        go.Box(
+            y=df[df["stroke"] == "Yes"]["avg_glucose_level"],
+            name="Yes",
+            marker_color="indianred",
+        )
+    )
+    figure.update_layout(
+        title={
+            "text": "Average glucose levels",
+            "font": {"size": 24},
+            "x": 0.5,  # center title
+        },
+        xaxis_title="Stroke",
+        yaxis_title="Glucose levels (mg/dL)",
+        autosize=False,
+        width=450,
+        height=450,
     )
 
-    return fig
+    return figure
+
+
+# DO THE SAME WITH BMI AND THATS IT!! EXPLAIN AND DOCUMENT!
 
 
 # Callbacks
@@ -231,23 +204,18 @@ def update_gender_pie_chart(chart_id):
     return figure
 
 
-def update_agepie_chart(chart_id):
-    figure = generate_agepie_chart(data, headers)
-    return figure
-
-
-def update_bar_chart(chart_id):
-    figure = generate_bar_chart(data, headers)
-    return figure
-
-
 def update_agebar_chart(chart_id):
     figure = generate_agebar_chart(data, headers)
     return figure
 
 
-def update_line_chart(chart_id):
-    figure = generate_line_chart(data, headers)
+def update_stroke_positive_smoker_chart(chart_id):
+    figure = generate_stroke_positive_smoker_chart(data, headers)
+    return figure
+
+
+def update_glucose_box_chart(chart_id):
+    figure = generate_glucose_box_chart(data, headers)
     return figure
 
 
@@ -263,14 +231,16 @@ def register_callbacks(app):
     def update_agebar_chart_callback(chart_id):
         return update_agebar_chart(chart_id)
 
-    # @app.callback(Output("agepie-chart", "figure"), [Input("agepie-chart", "id")])
-    # def update_agepie_chart_callback(chart_id):
-    #    return update_agepie_chart(chart_id)
+    @app.callback(
+        Output("stroke-positive-smoker-chart", "figure"),
+        [Input("stroke-positive-smoker-chart", "id")],
+    )
+    def update_stroke_positive_smoker_chart_callback(chart_id):
+        return update_stroke_positive_smoker_chart(chart_id)
 
-    # @app.callback(Output("bar-chart", "figure"), [Input("bar-chart", "id")])
-    # def update_bar_chart_callback(chart_id):
-    #    return update_bar_chart(chart_id)
-
-    # @app.callback(Output("line-chart", "figure"), [Input("line-chart", "id")])
-    # def update_line_chart_callback(chart_id):
-    #    return update_line_chart(chart_id)
+    @app.callback(
+        Output("glucose-bar-chart", "figure"),
+        [Input("glucose-bar-chart", "id")],
+    )
+    def update_glucose_box_chart_callback(chart_id):
+        return update_glucose_box_chart(chart_id)

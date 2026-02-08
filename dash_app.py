@@ -30,14 +30,11 @@ app.layout = html.Div(
             [
                 dcc.Graph(id="gender-pie-chart"),
                 dcc.Graph(id="agebar-chart"),
-                # dcc.Graph(id="ecg-bar-chart"),
-                # dcc.Graph(id="ecg-agebar-chart"),
+                dcc.Graph(id="stroke-positive-smoker-chart"),
+                dcc.Graph(id="glucose-bar-chart"),
             ],
             style={"display": "grid", "gridTemplateColumns": "1fr 1fr", "gap": "10px"},
         ),
-        # dcc.Graph(id="line-chart"),
-        # dcc.Graph(id="bar-chart"),
-        # dcc.Graph(id="agepie-chart"),
     ]
 )
 
