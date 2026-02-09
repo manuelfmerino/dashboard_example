@@ -1,9 +1,10 @@
 # Import the necessary libraries
-import psycopg2
+# import psycopg2
+import pandas as pd
 
 
 # Function to connect to PostgreSQL database and fetch data
-def fetch_selected_data():
+""" def fetch_selected_data():
     try:
         # Connect to your PostgreSQL database
         conn = psycopg2.connect(
@@ -32,4 +33,14 @@ def fetch_selected_data():
         return rows, headers
 
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        print(error) """
+
+
+# Alternatively, can directly read data from a .csv file
+def fetch_selected_data():
+    df = pd.read_csv("datasets/healthcare_stroke_dataset_clean.csv", sep=",")
+
+    rows = df.values
+    headers = df.columns.tolist()
+
+    return rows, headers
