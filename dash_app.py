@@ -20,7 +20,7 @@ app.layout = html.Div(
             "Stroke patients at a glance",
             style={
                 "textAlign": "center",
-                "marginBottom": "30px",
+                "marginBottom": "15px",
                 "fontSize": "48px",
                 "fontFamily": "Arial, sans-serif",
                 "fontWeight": "700",
@@ -57,9 +57,136 @@ app.layout = html.Div(
         # Row 1 – two large plots
         html.Div(
             [
-                dcc.Graph(id="gender-pie-chart"),
-                dcc.Graph(id="residence-pie-chart"),
-                dcc.Graph(id="agebar-chart"),
+                html.Div(
+                    [
+                        dcc.Graph(
+                            id="gender-pie-chart", style={"marginBottom": "-60px"}
+                        ),
+                        html.P(
+                            "Stroke:",
+                            style={
+                                "textAlign": "left",
+                                "marginBottom": "-28px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "paddingLeft": "190px",
+                                "position": "relative",
+                                "zIndex": 1000,
+                            },
+                        ),
+                        dcc.Dropdown(
+                            id="gender_stroke_val",
+                            options=[
+                                "Yes",
+                                "No",
+                            ],
+                            value="No",  # default selection
+                            clearable=False,
+                            style={
+                                "textAlign": "center",
+                                "marginBottom": "5px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "width": "30%",
+                                "display": "flex",
+                                "margin": "0 auto",
+                                "position": "relative",
+                                "zIndex": 1000,
+                                "paddingLeft": "140px",
+                            },
+                        ),
+                    ]
+                ),
+                html.Div(
+                    [
+                        dcc.Graph(
+                            id="residence-pie-chart", style={"marginBottom": "-60px"}
+                        ),
+                        html.P(
+                            "Stroke:",
+                            style={
+                                "textAlign": "left",
+                                "marginBottom": "-28px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "paddingLeft": "190px",
+                                "position": "relative",
+                                "zIndex": 1000,
+                            },
+                        ),
+                        dcc.Dropdown(
+                            id="residence_stroke_val",
+                            options=[
+                                "Yes",
+                                "No",
+                            ],
+                            value="No",  # default selection
+                            clearable=False,
+                            style={
+                                "textAlign": "center",
+                                "marginBottom": "5px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "width": "30%",
+                                "display": "flex",
+                                "margin": "0 auto",
+                                "position": "relative",
+                                "zIndex": 1000,
+                                "paddingLeft": "140px",
+                            },
+                        ),
+                    ]
+                ),
+                html.Div(
+                    [
+                        dcc.Graph(id="agebar-chart", style={"marginBottom": "-50px"}),
+                        html.P(
+                            "Stroke:",
+                            style={
+                                "textAlign": "left",
+                                "marginBottom": "-28px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "paddingLeft": "500px",
+                                "position": "relative",
+                                "zIndex": 1000,
+                            },
+                        ),
+                        dcc.Dropdown(
+                            id="age_stroke_val",
+                            options=[
+                                "Yes",
+                                "No",
+                            ],
+                            value="No",  # default selection
+                            clearable=False,
+                            style={
+                                "textAlign": "center",
+                                "marginBottom": "5px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "width": "20%",
+                                "display": "flex",
+                                "margin": "0 auto",
+                                "position": "relative",
+                                "paddingLeft": "500px",
+                                "zIndex": 1000,
+                            },
+                        ),
+                    ]
+                ),
             ],
             style={
                 "display": "grid",
@@ -70,8 +197,96 @@ app.layout = html.Div(
         # Row 2 – three smaller plots
         html.Div(
             [
-                dcc.Graph(id="stroke-positive-smoker-chart"),
-                dcc.Graph(id="job-tree-chart"),
+                html.Div(
+                    [
+                        dcc.Graph(
+                            id="stroke-positive-smoker-chart",
+                            style={"marginBottom": "-60px"},
+                        ),
+                        html.P(
+                            "Stroke:",
+                            style={
+                                "textAlign": "left",
+                                "marginBottom": "-28px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "paddingLeft": "185px",
+                                "position": "relative",
+                                "zIndex": 1000,
+                            },
+                        ),
+                        dcc.Dropdown(
+                            id="smoker_stroke_val",
+                            options=[
+                                "Yes",
+                                "No",
+                            ],
+                            value="No",  # default selection
+                            clearable=False,
+                            style={
+                                "textAlign": "center",
+                                "marginBottom": "5px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "width": "30%",
+                                "display": "flex",
+                                "margin": "0 auto",
+                                "position": "relative",
+                                "zIndex": 1000,
+                                "paddingLeft": "180px",
+                            },
+                        ),
+                    ]
+                ),
+                html.Div(
+                    [
+                        dcc.Graph(
+                            id="job-tree-chart",
+                            style={"marginBottom": "-60px", "paddingLeft": "20px"},
+                        ),
+                        html.P(
+                            "Stroke:",
+                            style={
+                                "textAlign": "left",
+                                "marginBottom": "-28px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "paddingLeft": "250px",
+                                "position": "relative",
+                                "zIndex": 1000,
+                            },
+                        ),
+                        dcc.Dropdown(
+                            id="job_stroke_val",
+                            options=[
+                                "Yes",
+                                "No",
+                            ],
+                            value="No",  # default selection
+                            clearable=False,
+                            style={
+                                "textAlign": "center",
+                                "marginBottom": "5px",
+                                "fontSize": "18px",
+                                "fontFamily": "Arial, sans-serif",
+                                "fontWeight": "700",
+                                "color": "#2c3e50",
+                                "width": "30%",
+                                "display": "flex",
+                                "margin": "0 auto",
+                                "position": "relative",
+                                "zIndex": 1000,
+                                "paddingLeft": "300px",
+                            },
+                        ),
+                    ]
+                ),
                 dcc.Graph(id="glucose-bar-chart"),
                 dcc.Graph(id="bmi-bar-chart"),
             ],
@@ -79,7 +294,7 @@ app.layout = html.Div(
                 "display": "grid",
                 "gridTemplateColumns": "1fr 1fr 1fr 1fr",
                 "gap": "0px",
-                "marginTop": "-50px",
+                "marginTop": "10px",
             },
         ),
     ]

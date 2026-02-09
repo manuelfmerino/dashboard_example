@@ -5,12 +5,12 @@ import numpy as np
 
 
 ### Plot generation
-def generate_gender_pie_chart(data, headers):
+def generate_gender_pie_chart(data, headers, stroke_value):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
 
     # Get stroke-positive people
-    df = df[df["stroke"] == "Yes"]
+    df = df[df["stroke"] == stroke_value]
 
     # Count the occurrences of each gender
     gender_counts = df["gender"].value_counts()
@@ -20,24 +20,24 @@ def generate_gender_pie_chart(data, headers):
     )
     figure.update_layout(
         title={
-            "text": "Gender <br><sup>(stroke patients)</sup>",
+            "text": "Gender",
             "font": {"size": 24},
             "x": 0.45,  # center title
         },
         autosize=False,
         width=450,
-        height=450,
+        height=400,
     )
 
     return figure
 
 
-def generate_residence_pie_chart(data, headers):
+def generate_residence_pie_chart(data, headers, residence_stroke_val):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
 
     # Get stroke-positive people
-    df = df[df["stroke"] == "Yes"]
+    df = df[df["stroke"] == residence_stroke_val]
 
     # Count the occurrences of each gender
     gender_counts = df["residence_type"].value_counts()
@@ -47,24 +47,24 @@ def generate_residence_pie_chart(data, headers):
     )
     figure.update_layout(
         title={
-            "text": "Residence <br><sup>(stroke patients)</sup>",
+            "text": "Residence",
             "font": {"size": 24},
             "x": 0.45,  # center title
         },
         autosize=False,
         width=450,
-        height=450,
+        height=400,
     )
 
     return figure
 
 
-def generate_agebar_chart(data, headers):
+def generate_agebar_chart(data, headers, age_stroke_val):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
 
     # Get stroke-positive people
-    df = df[df["stroke"] == "Yes"]
+    df = df[df["stroke"] == age_stroke_val]
 
     # Convert age column to numeric data type
     df["age"] = pd.to_numeric(df["age"], errors="coerce")
@@ -137,7 +137,7 @@ def generate_agebar_chart(data, headers):
     # Customize the layout
     fig.update_layout(
         title={
-            "text": "Age <br><sup>(stroke patients)</sup>",
+            "text": "Age",
             "font": {"size": 24},
             "x": 0.5,  # center title
         },
@@ -150,12 +150,12 @@ def generate_agebar_chart(data, headers):
     return fig
 
 
-def generate_stroke_positive_smoker_chart(data, headers):
+def generate_stroke_positive_smoker_chart(data, headers, smoker_stroke_val):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
 
     # Get stroke-positive people
-    df = df[df["stroke"] == "Yes"]
+    df = df[df["stroke"] == smoker_stroke_val]
 
     # Count the occurrences of each smoking case
     smoking_counts = df["smoking_status"].value_counts()
@@ -171,41 +171,57 @@ def generate_stroke_positive_smoker_chart(data, headers):
 
     figure.update_layout(
         title={
-            "text": "Smoking status <br><sup>(stroke patients)</sup>",
+            "text": "Smoking status",
             "font": {"size": 24},
             "x": 0.45,  # center title
         },
         autosize=False,
         width=500,
-        height=500,
+        height=450,
     )
 
     return figure
 
 
-def generate_job_tree_chart(data, headers):
+def generate_job_tree_chart(data, headers, job_stroke_val):
     # Convert the data and headers to a pandas DataFrame
     df = pd.DataFrame(data, columns=headers)
 
     # Get stroke-positive people
-    df = df[df["stroke"] == "Yes"]
+    df = df[df["stroke"] == job_stroke_val]
 
     # Count the occurrences of each smoking case
     job_counts = df["work_type"].value_counts()
 
+    color_map = {
+        "Private": "#5863f9",
+        "Self-employed": "#ec4b34",
+        "children": "#9b59b6",
+        "Govt_job": "#00c58b",
+        "Never_worked": "#ff9750",
+    }
+    colors = [color_map[label] for label in job_counts.index]
+
     figure = go.Figure(
-        data=[go.Pie(labels=job_counts.index, values=job_counts.values, hole=0.6)]
+        data=[
+            go.Pie(
+                labels=job_counts.index,
+                values=job_counts.values,
+                marker=dict(colors=colors),
+                hole=0.6,
+            )
+        ]
     )
 
     figure.update_layout(
         title={
-            "text": "Occupation <br><sup>(stroke patients)</sup>",
+            "text": "Occupation",
             "font": {"size": 24},
             "x": 0.45,  # center title
         },
         autosize=False,
         width=500,
-        height=500,
+        height=450,
     )
 
     return figure
@@ -232,7 +248,7 @@ def generate_glucose_box_chart(data, headers):
     )
     figure.update_layout(
         title={
-            "text": "Avg. glucose levels <br><sup>(comparison)</sup>",
+            "text": "Avg. glucose levels",
             "font": {"size": 24},
             "x": 0.5,  # center title
         },
@@ -240,7 +256,7 @@ def generate_glucose_box_chart(data, headers):
         yaxis_title="Glucose levels (mg/dL)",
         autosize=False,
         width=450,
-        height=450,
+        height=400,
     )
 
     return figure
@@ -267,7 +283,7 @@ def generate_bmi_box_chart(data, headers):
     )
     figure.update_layout(
         title={
-            "text": "BMI <br><sup>(comparison)</sup>",
+            "text": "BMI",
             "font": {"size": 24},
             "x": 0.5,  # center title
         },
@@ -275,7 +291,7 @@ def generate_bmi_box_chart(data, headers):
         yaxis_title="Body mass index",
         autosize=False,
         width=450,
-        height=450,
+        height=400,
     )
 
     return figure
@@ -300,28 +316,28 @@ def update_kpis_chart(chart_id):
     )
 
 
-def update_gender_pie_chart(chart_id):
-    figure = generate_gender_pie_chart(data, headers)
+def update_gender_pie_chart(stroke_value):
+    figure = generate_gender_pie_chart(data, headers, stroke_value)
     return figure
 
 
-def update_residence_pie_chart(chart_id):
-    figure = generate_residence_pie_chart(data, headers)
+def update_residence_pie_chart(residence_stroke_val):
+    figure = generate_residence_pie_chart(data, headers, residence_stroke_val)
     return figure
 
 
-def update_agebar_chart(chart_id):
-    figure = generate_agebar_chart(data, headers)
+def update_agebar_chart(age_stroke_val):
+    figure = generate_agebar_chart(data, headers, age_stroke_val)
     return figure
 
 
-def update_stroke_positive_smoker_chart(chart_id):
-    figure = generate_stroke_positive_smoker_chart(data, headers)
+def update_stroke_positive_smoker_chart(smoker_stroke_val):
+    figure = generate_stroke_positive_smoker_chart(data, headers, smoker_stroke_val)
     return figure
 
 
-def update_job_tree_chart(chart_id):
-    figure = generate_job_tree_chart(data, headers)
+def update_job_tree_chart(job_stroke_val):
+    figure = generate_job_tree_chart(data, headers, job_stroke_val)
     return figure
 
 
@@ -348,34 +364,35 @@ def register_callbacks(app):
         return update_kpis_chart(chart_id)
 
     @app.callback(
-        Output("gender-pie-chart", "figure"), [Input("gender-pie-chart", "id")]
+        Output("gender-pie-chart", "figure"), [Input("gender_stroke_val", "value")]
     )
-    def update_gender_pie_chart_callback(chart_id):
-        return update_gender_pie_chart(chart_id)
+    def update_gender_pie_chart_callback(gender_stroke_val):
+        return update_gender_pie_chart(gender_stroke_val)
 
     @app.callback(
-        Output("residence-pie-chart", "figure"), [Input("residence-pie-chart", "id")]
+        Output("residence-pie-chart", "figure"),
+        [Input("residence_stroke_val", "value")],
     )
-    def update_residence_pie_chart_callback(chart_id):
-        return update_residence_pie_chart(chart_id)
+    def update_residence_pie_chart_callback(residence_stroke_val):
+        return update_residence_pie_chart(residence_stroke_val)
 
-    @app.callback(Output("agebar-chart", "figure"), [Input("agebar-chart", "id")])
-    def update_agebar_chart_callback(chart_id):
-        return update_agebar_chart(chart_id)
+    @app.callback(Output("agebar-chart", "figure"), [Input("age_stroke_val", "value")])
+    def update_agebar_chart_callback(age_stroke_val):
+        return update_agebar_chart(age_stroke_val)
 
     @app.callback(
         Output("stroke-positive-smoker-chart", "figure"),
-        [Input("stroke-positive-smoker-chart", "id")],
+        [Input("smoker_stroke_val", "value")],
     )
-    def update_stroke_positive_smoker_chart_callback(chart_id):
-        return update_stroke_positive_smoker_chart(chart_id)
+    def update_stroke_positive_smoker_chart_callback(smoker_stroke_val):
+        return update_stroke_positive_smoker_chart(smoker_stroke_val)
 
     @app.callback(
         Output("job-tree-chart", "figure"),
-        [Input("job-tree-chart", "id")],
+        [Input("job_stroke_val", "value")],
     )
-    def update_job_tree_chart_callback(chart_id):
-        return update_job_tree_chart(chart_id)
+    def update_job_tree_chart_callback(job_stroke_val):
+        return update_job_tree_chart(job_stroke_val)
 
     @app.callback(
         Output("glucose-bar-chart", "figure"),
