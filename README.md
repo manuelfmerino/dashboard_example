@@ -4,7 +4,7 @@ Repository for a data visualization dashboard.
 Author: Manuel F. Merino
 Contact: manuelfmerino@gmail.com
 
-## Description
+### Description
 This is an example of a dashboard for a data visualization project in the monitorization of stroke patients to identify trends in demographics and lifestyle. This dataset can be used to predict individuals liable to suffering a stroke and to select population segments that can be targeted for clinical trials.
 
 ### Usage
