@@ -35,21 +35,21 @@ app.layout = html.Div(
                         html.Div("Total patients", className="kpi-title"),
                         html.Div(id="kpi-total", className="kpi-value"),
                     ],
-                    className="kpi-card",
+                    className="kpi-card kpi-generic",
                 ),
                 html.Div(
                     [
                         html.Div("Healthy", className="kpi-title"),
                         html.Div(id="kpi-no-stroke", className="kpi-value"),
                     ],
-                    className="kpi-no-stroke",
+                    className="kpi-card kpi-no-stroke",
                 ),
                 html.Div(
                     [
                         html.Div("Stroke", className="kpi-title"),
                         html.Div(id="kpi-stroke", className="kpi-value"),
                     ],
-                    className="kpi-stroke",
+                    className="kpi-card kpi-stroke",
                 ),
             ],
             className="kpi-container",
@@ -79,7 +79,7 @@ app.layout = html.Div(
                 "display": "grid",
                 "gridTemplateColumns": "1fr 1fr 1fr 1fr",
                 "gap": "0px",
-                "marginTop": "20px",
+                "marginTop": "-50px",
             },
         ),
     ]
