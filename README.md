@@ -17,4 +17,4 @@ I am using the stroke prediction dataset from Kaggle (https://www.kaggle.com/dat
 ### Aditional details
 The dashboard allows visualizing the most relevant demographic (gender, residence, age) and lifestyle (smoking status, job) for healthy people and individuals that suffered a stroke. It also includes comparisons of some health markers such as glucose levels and bmi indices.
 
-![Screenshot of the Stroke patients dashboard.] (https://https://github.com/manuelfmerino/dashboard_example/datasets/dashboard_img.png)
+![Screenshot of the Stroke patients dashboard.] (https://github.com/manuelfmerino/dashboard_example/blob/main/datasets/dashboard_img.png)
