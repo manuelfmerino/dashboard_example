@@ -15,25 +15,72 @@ app = Dash(__name__)
 # Define layout
 app.layout = html.Div(
     [
+        # Dashboard title
         html.H1(
-            "Stroke distribution dashboard",
+            "Stroke patients at a glance",
             style={
                 "textAlign": "center",
                 "marginBottom": "30px",
-                "fontSize": "48px",  # bigger text
+                "fontSize": "48px",
                 "fontFamily": "Arial, sans-serif",
                 "fontWeight": "700",
                 "color": "#2c3e50",
             },
         ),
+        # Brief summary
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.Div("Total patients", className="kpi-title"),
+                        html.Div(id="kpi-total", className="kpi-value"),
+                    ],
+                    className="kpi-card",
+                ),
+                html.Div(
+                    [
+                        html.Div("Healthy", className="kpi-title"),
+                        html.Div(id="kpi-no-stroke", className="kpi-value"),
+                    ],
+                    className="kpi-no-stroke",
+                ),
+                html.Div(
+                    [
+                        html.Div("Stroke", className="kpi-title"),
+                        html.Div(id="kpi-stroke", className="kpi-value"),
+                    ],
+                    className="kpi-stroke",
+                ),
+            ],
+            className="kpi-container",
+        ),
+        # Row 1 – two large plots
         html.Div(
             [
                 dcc.Graph(id="gender-pie-chart"),
+                dcc.Graph(id="residence-pie-chart"),
                 dcc.Graph(id="agebar-chart"),
-                dcc.Graph(id="stroke-positive-smoker-chart"),
-                dcc.Graph(id="glucose-bar-chart"),
             ],
-            style={"display": "grid", "gridTemplateColumns": "1fr 1fr", "gap": "10px"},
+            style={
+                "display": "grid",
+                "gridTemplateColumns": "1fr 1fr 1fr",
+                "gap": "0px",
+            },
+        ),
+        # Row 2 – three smaller plots
+        html.Div(
+            [
+                dcc.Graph(id="stroke-positive-smoker-chart"),
+                dcc.Graph(id="job-tree-chart"),
+                dcc.Graph(id="glucose-bar-chart"),
+                dcc.Graph(id="bmi-bar-chart"),
+            ],
+            style={
+                "display": "grid",
+                "gridTemplateColumns": "1fr 1fr 1fr 1fr",
+                "gap": "0px",
+                "marginTop": "20px",
+            },
         ),
     ]
 )
