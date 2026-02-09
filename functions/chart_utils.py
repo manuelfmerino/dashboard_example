@@ -160,11 +160,20 @@ def generate_stroke_positive_smoker_chart(data, headers, smoker_stroke_val):
     # Count the occurrences of each smoking case
     smoking_counts = df["smoking_status"].value_counts()
 
+    color_map = {
+        "never smoked": "#5863f9",
+        "Unknown": "#ec4b34",
+        "formerly smoked": "#9b59b6",
+        "smokes": "#00c58b",
+    }
+    colors = [color_map[label] for label in smoking_counts.index]
+
     figure = go.Figure(
         go.Treemap(
             labels=smoking_counts.index,
             parents=[""] * len(smoking_counts),  # single-level treemap
             values=smoking_counts.values,
+            marker=dict(colors=colors),
             textinfo="label+value+percent root",
         )
     )
