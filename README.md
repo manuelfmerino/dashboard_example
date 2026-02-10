@@ -16,3 +16,14 @@ I am using the stroke prediction dataset from Kaggle (https://www.kaggle.com/dat
 
 ### Aditional details
 The dashboard allows visualizing the most relevant demographic (gender, residence, age) and lifestyle (smoking status, job) for healthy people and individuals that suffered a stroke. It also includes comparisons of some health markers such as glucose levels and bmi indices.
+
+
+### Environment used
+Python 3.14.3
+Pandas 3.0.0
+Matplotlib 3.10.8
+Plotly 6.5.2
+Dash 4.0.0
+Seaborn 0.13.2
+
+PostgreSQL 18 and pgAdmin 4 were used.
